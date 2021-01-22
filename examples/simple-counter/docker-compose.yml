@@ -1,0 +1,18 @@
+version: "3.2"
+services:
+        server:
+                build:
+                        context: "../../"
+                        dockerfile: "examples/simple-counter/server/Dockerfile"
+                command: ["npm", "start"]
+                ports:
+                        - 7001:7001
+        client:
+                build:
+                        context: "../../"
+                        dockerfile: "examples/simple-counter/client/Dockerfile"
+                command: ["nginx", "-g", "daemon off;"]
+                environment:
+                        - SERVER_PORT=7001
+                ports:
+                        - 7000:80
