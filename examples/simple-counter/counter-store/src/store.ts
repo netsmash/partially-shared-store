@@ -1,4 +1,4 @@
-import { PartiallySharedStore } from 'partially-shared-store/store';
+import { PartiallySharedStore } from 'partially-shared-store';
 import { State, createInitialState } from './state';
 import { Identificable } from './identificable';
 import { ActionRequestTypes } from './action-requests';

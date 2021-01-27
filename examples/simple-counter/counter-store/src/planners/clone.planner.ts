@@ -2,7 +2,7 @@ import { DeepReadonly } from 'partially-shared-store';
 import { State } from '../state';
 import { ActionRequest, ActionRequestTypes as ART } from '../action-requests';
 import { Action, ActionTypes as AT, createAction } from '../actions';
-import { VERSION } from '../version';
+import { version } from '../version';
 
 export const clonePlanner = (
   state: DeepReadonly<State>,
@@ -10,7 +10,7 @@ export const clonePlanner = (
 ): [Action<AT.Clone>] => [
   createAction(AT.Clone)({
     state,
-    version: VERSION,
+    version,
     target: request.author,
   }),
 ];
