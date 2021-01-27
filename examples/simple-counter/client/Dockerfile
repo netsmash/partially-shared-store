@@ -4,6 +4,7 @@ WORKDIR /usr/app/examples/simple-counter/client/
 # Add src
 COPY src /usr/app/src
 COPY package.json /usr/app
+COPY README.md /usr/app
 COPY tsconfig.json /usr/app
 # Add custom store
 COPY examples/simple-counter/counter-store /usr/app/examples/simple-counter/counter-store
@@ -23,7 +24,7 @@ RUN echo "INSTALL AND BUILD PSSTORE" \
     && npm install \
     && npm link partially-shared-store \
     && npm run build \
-    && cd dist/ \
+    && cd dist \
     && npm link \
 # install client
     && echo "INSTALL CLIENT" \

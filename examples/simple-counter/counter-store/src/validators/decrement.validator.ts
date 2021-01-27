@@ -1,5 +1,5 @@
 import { DeepReadonly } from 'partially-shared-store';
-import { ValidationError } from 'partially-shared-store/errors';
+import { ValidationError } from 'partially-shared-store';
 import { State } from '../state';
 import { ActionRequest, ActionRequestTypes as ART } from '../action-requests';
 

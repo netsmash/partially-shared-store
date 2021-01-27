@@ -1,3 +1,3 @@
-export { Action, ActionRequest, DeepReadonly } from './definitions';
-export { createStore, PartiallySharedStore } from './store';
-export { PartiallySharedStoreError } from './errors';
+export * from './definitions';
+export * from './store';
+export * from './errors';
