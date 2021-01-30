@@ -1,0 +1,53 @@
+version: '3.7'
+services:
+  idp-db:
+    image: postgres
+    volumes:
+      - postgresdb:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: rw-keycloak
+      POSTGRES_PASSWORD: abc123
+    ports:
+      - 5431:5431
+
+  idp:
+    image: jboss/keycloak
+    volumes:
+      - ./docker-volumes/keycloak/imports:/opt/jboss/keycloak/imports
+    command:
+      - '-b 0.0.0.0 -Dkeycloak.profile.feature.upload_scripts=enabled'
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: idp-db
+      DB_DATABASE: keycloak
+      DB_USER: rw-keycloak
+      DB_PASSWORD: abc123
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_IMPORT: /opt/jboss/keycloak/imports/realm-export.json
+      # JDBC_PARAMS: "connectTimeout=30000"
+    ports:
+      - 8080:8080
+    depends_on:
+      - idp-db
+
+  server-db:
+    image: mongo
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: domotype
+      MONGO_USER: user
+      MONGO_PASSWORD: abc123
+    volumes:
+      - mongodb:/data/db
+      - mongodb_config:/data/configdb
+      - ./docker-volumes/mongo/:/docker-entrypoint-initdb.d
+
+volumes:
+  postgresdb:
+  mongodb:
+  mongodb_config:

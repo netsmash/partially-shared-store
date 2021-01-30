@@ -1,0 +1,15 @@
+{
+  "version": "0.0.0",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "build": "node_modules/.bin/tsc && cp package.json dist"
+  },
+  "dependencies": {
+    "partially-shared-store": "^0.1.4"
+  },
+  "devDependencies": {
+    "typescript": "^4.0.3"
+  },
+  "name": "domotype-store"
+}
