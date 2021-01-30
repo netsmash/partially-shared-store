@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "declaration": true,
+    "outDir": "./dist",
+    "strict": true,
+    "sourceMap": true,
+    "typeRoots": ["node_modules/@types"],
+    "lib": ["ES6", "ES2017.Object", "ES2018.AsyncIterable"]
+  },
+  "exclude": ["dist", "node_modules"]
+}
