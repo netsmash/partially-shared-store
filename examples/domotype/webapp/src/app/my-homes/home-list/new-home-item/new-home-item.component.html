@@ -1,0 +1,11 @@
+<form
+	[formGroup]="homeForm"
+	(ngSubmit)="createHome()"
+>
+	<header>
+		<input id="name" formControlName="name" type="text">
+	</header>
+	<footer>
+		<app-button class="flat" (click)="createHome()">Create</app-button>
+	</footer>
+</form>

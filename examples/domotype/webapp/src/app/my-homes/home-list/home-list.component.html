@@ -1,0 +1,13 @@
+<ng-container
+	*ngIf="(homes$ | async) as homes"
+>
+	<div
+		*ngFor="let home of homes"
+		class="item"
+	>
+		<app-home-item [home]="home"></app-home-item>
+	</div>
+	<div class="item">
+		<app-new-home-item></app-new-home-item>
+	</div>
+</ng-container>

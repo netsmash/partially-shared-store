@@ -14,6 +14,10 @@ export const environment = {
     showDebugInformation: true,
     disableAtHashCheck: true,
   },
+  server: {
+    url: 'http://localhost:7001',
+    ws: 'ws://localhost:7001/ws',
+  },
 };
 
 /*

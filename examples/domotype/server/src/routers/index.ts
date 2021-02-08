@@ -1,25 +1,26 @@
-import { Router, Request, Response } from 'express';
+import * as cors from 'cors';
+import { Router } from 'express';
 import { AuthService } from '../auth.service';
 import { router as homeRouter } from './home';
 import { router as userRouter } from './user';
-import { router as stateRouter } from './state';
+import { router as wsTicketRouter } from './websocket-ticket';
 
 const authService = AuthService.getInstance();
 const router = Router();
 
-router.use(async (req: Request, res: Response, next) => {
+router.use(cors());
+router.use('/', function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header(
     'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept, Identity-Token',
+    'Origin, X-Requested-With, Content-Type, Accept',
   );
   next();
 });
-
 router.use('/', authService.authentication());
 
 router.use('/homes', homeRouter);
 router.use('/users', userRouter);
-router.use('/states', stateRouter);
+router.use('/ws/tickets', wsTicketRouter);
 
 export { router };

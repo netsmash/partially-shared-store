@@ -37,5 +37,5 @@ export const deserializeClone = (state: DeepReadonly<State>) => (
   type: AT.Clone,
   version: obj[3],
   target: deserializeIdentificable(state)(obj[4]),
-  state: deserializeState(state)(obj[5]),
+  state: deserializeState(obj[5]),
 });

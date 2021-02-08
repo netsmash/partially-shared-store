@@ -22,14 +22,14 @@ export const deserializeKnownUser = (state: DeepReadonly<State>) => (
   return user;
 };
 
-export type SerializeUnknownUser =
+export type SerializedUnknownUser =
   | [SerializedIdentificable, string]
   | [SerializedIdentificable, string, string];
 
 export const serializeUnknownUser = (state: DeepReadonly<State>) => (
   user: DeepReadonly<User>,
-): SerializeUnknownUser => {
-  const serializedUser: SerializeUnknownUser = [
+): SerializedUnknownUser => {
+  const serializedUser: SerializedUnknownUser = [
     serializeIdentificable(state)(toIdentificable(user)),
     user.name,
   ];
@@ -40,7 +40,7 @@ export const serializeUnknownUser = (state: DeepReadonly<State>) => (
 };
 
 export const deserializeUnknownUser = (state: DeepReadonly<State>) => (
-  serializedUser: DeepReadonly<SerializeUnknownUser>,
+  serializedUser: DeepReadonly<SerializedUnknownUser>,
 ): User => {
   const user: User = {
     ...deserializeIdentificable(state)(serializedUser[0]),

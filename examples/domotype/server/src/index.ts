@@ -3,6 +3,7 @@ import * as mongoose from 'mongoose';
 import * as http from 'http';
 import * as WebSocket from 'ws';
 import { json } from 'body-parser';
+import * as cors from 'cors';
 import { useWebsocket } from './websocket';
 import { TaskService } from './task.service';
 import { router } from './routers';
@@ -10,15 +11,16 @@ import { router } from './routers';
 const app = express();
 app.use(json());
 app.use('/', router);
+app.use(cors());
 
 const server: http.Server = http.createServer(app);
 useWebsocket(server);
 
-const dbUser: string = process.env.MONGODB_USER || 'user';
-const dbPass: string = process.env.MONGODB_PASS || 'abc123';
-const dbName: string = process.env.MONGODB_DATABASE || 'domotype';
-const dbHost: string = process.env.MONGODB_HOST || 'localhost';
-const dbPort: string = process.env.MONGODB_PORT || '27017';
+const dbUser: string = process.env.MONGO_USER as string;
+const dbPass: string = process.env.MONGO_PASSWORD as string;
+const dbName: string = process.env.MONGO_DATABASE as string;
+const dbHost: string = process.env.MONGO_HOST as string;
+const dbPort: string = process.env.MONGO_PORT as string;
 
 mongoose.connect(
   `mongodb://${dbUser}:${dbPass}@${dbHost}:${dbPort}/${dbName}`,

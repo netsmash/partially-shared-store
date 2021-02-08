@@ -47,6 +47,26 @@ services:
       - mongodb_config:/data/configdb
       - ./docker-volumes/mongo/:/docker-entrypoint-initdb.d
 
+  server:
+    build:
+      context: "../../"
+      dockerfile: "examples/domotype/server/Dockerfile"
+    command: ["npm", "start"]
+    ports:
+        - 7001:7001
+    environment:
+      MONGO_USER: user
+      MONGO_PASSWORD: abc123
+      MONGO_DATABASE: domotype
+      MONGO_HOST: server-db
+      MONGO_PORT: 27017
+      AUTH_ISSUER_URL: http://idp:8080/auth/realms/development
+      AUTH_KEY_ALG: RS256
+    volumes:
+        - ./server/src:/usr/app/examples/domotype/server/src
+    depends_on:
+        - server-db
+
 volumes:
   postgresdb:
   mongodb:
