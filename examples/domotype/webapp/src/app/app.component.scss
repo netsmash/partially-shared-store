@@ -1,0 +1,112 @@
+@import '../styles.scss';
+:host {
+  display: flex;
+  flex-flow: column;
+  justify-content: stretch;
+
+  min-height: 100%;
+  color: var(--on-primary-background-color);
+  background: var(--primary-background-color);
+
+  header {
+    display: flex;
+    flex: auto 0;
+    flex-flow: row;
+    justify-content: space-between;
+    padding-left: 1em;
+    padding-right: 1em;
+    background-color: var(--primary-color);
+    color: var(--on-primary-color);
+    /* box-shadow: inset 0px -1px 0px 0px var(--primary-border-color); */
+    box-shadow: 0px 0px 4px 0px;
+
+    h1 {
+      flex: auto 1;
+      text-align: center;
+    }
+
+    z-index: 1;
+  }
+
+  footer {
+    display: flex;
+    flex: auto 0;
+    flex-flow: row;
+    justify-content: space-between;
+    padding: 1em;
+    padding-top: 2em;
+    background-color: var(--primary-dark-color);
+    color: var(--on-primary-dark-color);
+    /*border-top: 1px solid var(--primary-border-color);*/
+    box-shadow: 0px 0px 4px 0px;
+  }
+
+  div.layout {
+    @media (max-width: $bp-xs-max) {
+      --main-width: 100%;
+      --display-sidenav: none;
+    }
+    @media (min-width: $bp-xs-max) and (max-width: $bp-sm-max) {
+      --main-width: 100%;
+      --display-sidenav: none;
+    }
+    @media (min-width: $bp-sm-max) and (max-width: $bp-md-max) {
+      --main-width: #{$bp-xs-max};
+      --display-sidenav: flex;
+    }
+    @media (min-width: $bp-md-max) and (max-width: $bp-lg-max) {
+      --main-width: #{$bp-sm-max};
+      --display-sidenav: flex;
+    }
+    @media (min-width: $bp-lg-max) and (max-width: $bp-xl-max) {
+      --main-width: #{$bp-md-max};
+      --display-sidenav: flex;
+    }
+    @media (min-width: $bp-xl-max) {
+      --main-width: #{$bp-lg-max};
+      --display-sidenav: flex;
+    }
+
+    display: flex;
+    flex: auto 1;
+    flex-flow: row;
+    align-items: stretch;
+    width: 100%;
+    div.sidenav {
+      display: var(--display-sidenav);
+      flex-flow: column;
+      padding: 1em;
+      padding-top: 3em;
+      width: calc((100% - var(--main-width)) / 2);
+    }
+    div.sidenav-left {
+      order: 1;
+      box-shadow: inset -1px 0px 0px 0px var(--primary-border-color);
+
+      align-items: flex-end;
+    }
+    div.sidenav-right {
+      order: 3;
+      box-shadow: inset 1px 0px 0px 0px var(--primary-border-color);
+      /*
+      background-color: var(--primary-surface-color);
+      color: var(--on-primary-surface-color);
+			*/
+    }
+
+    main {
+      display: flex;
+      flex-flow: column;
+      align-items: stretch;
+      width: var(--main-width);
+      order: 2;
+
+      padding-top: 1em;
+      padding-left: 1em;
+      padding-right: 1em;
+
+      background-color: var(--primary-surface-color);
+      color: var(--on-primary-surface-color);
+    }
+  }
+}

@@ -1,0 +1,34 @@
+:host {
+  --padding-x: 1em;
+  --padding-y: 0.5em;
+
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 0.9rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  text-transform: uppercase;
+
+  padding: var(--padding-y) var(--padding-x) var(--padding-y) var(--padding-x);
+
+  border-radius: var(--primary-border-radius);
+  box-shadow: 0 3px 1px -2px var(--primary-border-color),
+    0 2px 2px 0 var(--primary-border-color),
+    0 1px 5px 0 var(--primary-border-color);
+
+  color: var(--on-primary-light-color);
+  background-color: var(--primary-light-color);
+
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+:host-context(.flat) {
+  color: var(--primary-color);
+  background-color: var(--secondary-background-color);
+  box-shadow: none;
+}

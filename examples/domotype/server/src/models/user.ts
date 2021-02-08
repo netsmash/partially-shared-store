@@ -1,11 +1,11 @@
 import { Document, model, Schema } from 'mongoose';
-import { ModelScopes } from './base';
+import { SerializedUnknownUser } from 'domotype-store/serializers/models';
 
 export interface UserDocument extends Document {
   sub: string;
   displayName: string;
   imageUrl?: string;
-  serialize: (scope?: ModelScopes) => Partial<UserDocument>;
+  serialize: () => SerializedUnknownUser;
 }
 
 const UserSchema = new Schema<UserDocument>(
@@ -28,20 +28,17 @@ const UserSchema = new Schema<UserDocument>(
   { collection: 'users' },
 );
 
-UserSchema.methods.serialize = function (
-  scope: ModelScopes = ModelScopes.Public,
-) {
-  const obj = this.toObject() as Partial<UserDocument>;
-  obj.id = obj._id;
-  delete obj._id;
+UserSchema.methods.serialize = function (): SerializedUnknownUser {
+  const serializedUser: SerializedUnknownUser = [
+    this._id.toString(),
+    this.displayName,
+  ];
 
-  if (scope === ModelScopes.Public) {
-    delete obj.sub;
+  if (this.imageUrl) {
+    serializedUser.push(this.imageUrl);
   }
 
-  delete obj.__v;
-
-  return obj;
+  return serializedUser;
 };
 
 export const UserModel = model<UserDocument>('User', UserSchema);

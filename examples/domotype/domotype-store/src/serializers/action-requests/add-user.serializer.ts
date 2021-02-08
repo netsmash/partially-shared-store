@@ -14,14 +14,14 @@ import { toIdentificable } from '../../identificable';
 import {
   deserializeUnknownUser,
   serializeUnknownUser,
-  SerializeUnknownUser,
+  SerializedUnknownUser,
 } from '../models';
 
 export type SerializedAddUserActionRequest = [
   SerializedTypes.ActionRequest,
   ART.AddUser,
   SerializedIdentificable,
-  SerializeUnknownUser,
+  SerializedUnknownUser,
 ];
 
 export const serializeAddUser = (state: DeepReadonly<State>) => (
@@ -40,4 +40,3 @@ export const deserializeAddUser = (state: DeepReadonly<State>) => (
   type: ART.AddUser,
   user: deserializeUnknownUser(state)(obj[3]),
 });
-

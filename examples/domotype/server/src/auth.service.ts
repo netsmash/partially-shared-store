@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import axios from 'axios';
 import { UserDocument, UserModel } from './models/user';
+import { WebSocketTicketModel } from './models';
 
 const BEGIN_KEY = '-----BEGIN PUBLIC KEY-----\n';
 const END_KEY = '\n-----END PUBLIC KEY-----\n';
@@ -60,10 +61,8 @@ export class AuthService {
     return AuthService.instance;
   }
 
-  protected issuer: string =
-    process.env.AUTH_ISSUER_URL ||
-    'http://localhost:8080/auth/realms/development';
-  protected algorithm = (process.env.AUTH_KEY_ALG || 'RS256') as jwt.Algorithm;
+  protected issuer: string = process.env.AUTH_ISSUER_URL as string;
+  protected algorithm = process.env.AUTH_KEY_ALG as jwt.Algorithm;
   protected publicKey?: PublicKey;
 
   protected async requestKey(): Promise<void> {
@@ -148,5 +147,24 @@ export class AuthService {
         return this.returnError(response)('Authentication failed');
       }
     };
+  }
+
+  public async websocketTicketAuthentication(request: Request): Promise<void> {
+    try {
+      const url = new URL(request.url, `http://${request.headers.host}`);
+      const ticketId = url.searchParams.get('ticket');
+      if (!ticketId) {
+        return this.returnError()(`No ticket query param`);
+      }
+      const user: UserDocument | undefined = await WebSocketTicketModel.use(
+        ticketId,
+      );
+      if (!user) {
+        return this.returnError()(`Authentication failed`);
+      }
+      request.user = user;
+    } catch (error) {
+      return this.returnError()(`Invalid url`);
+    }
   }
 }

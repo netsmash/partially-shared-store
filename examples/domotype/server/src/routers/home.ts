@@ -1,31 +1,26 @@
-import { createInitialState } from 'domotype-store';
 import { Router, Request, Response } from 'express';
-import { HomeDocument, HomeModel, StateModel } from '../models';
+import { HomeModel } from '../models';
 
 const router = Router();
 
 router.get('/', async (request: Request, response: Response) => {
+  // TODO: filter by user
   const homes = await HomeModel.find({});
-  return response
-    .status(200)
-    .send(homes.map((home: HomeDocument) => home.serialize()));
+  const serializedHomes = await Promise.all(
+    homes.map((home) => home.serialize()),
+  );
+  return response.status(200).send(serializedHomes);
 });
 
 router.post('/', async (request: Request, response: Response) => {
-  const state = new StateModel();
-  state.value = createInitialState();
-  await state.save();
-
   const home = new HomeModel({
-    stateId: state._id,
     name: request.body.name,
+    devices: [],
+    users: [request.user._id],
   });
   await home.save();
 
-  state.homeId = home._id;
-  await state.save();
-
-  return response.status(201).send(home.serialize());
+  return response.status(201).send(await home.serialize());
 });
 
 router.get('/:id', async (request: Request, response: Response) => {

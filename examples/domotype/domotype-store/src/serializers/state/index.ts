@@ -9,14 +9,16 @@ import {
 import {
   deserializeUnknownUser,
   serializeUnknownUser,
-  SerializeUnknownUser,
+  SerializedUnknownUser,
 } from '../models/user.serializer';
 import { SerializedTypes } from '../types';
 
 export type SerializedState = [
   SerializedTypes.State,
+  string,
+  string,
   SerializedUnknownDevice[],
-  SerializeUnknownUser[],
+  SerializedUnknownUser[],
 ];
 
 export const isSerializedState = (obj: any): obj is SerializedState =>
@@ -24,24 +26,36 @@ export const isSerializedState = (obj: any): obj is SerializedState =>
 
 export const serializeState = (state: DeepReadonly<State>): SerializedState => [
   SerializedTypes.State,
+  state.id,
+  state.name,
   Object.values(state.devices).map(serializeUnknownDevice(state)),
   Object.values(state.users).map(serializeUnknownUser(state)),
 ];
 
-export const deserializeState = (state: DeepReadonly<State>) => (
-  obj: DeepReadonly<SerializedState>,
-): State => ({
-  devices: obj[1].reduce<{ [index: string]: Device }>(
-    (devices, serializedDevice) => {
-      const device: Device = deserializeUnknownDevice(state)(serializedDevice);
-      devices[device.id] = device;
-      return devices;
-    },
-    {},
-  ),
-  users: obj[2].reduce<{ [index: string]: User }>((users, serializedUser) => {
-    const user: User = deserializeUnknownUser(state)(serializedUser);
-    users[user.id] = user;
-    return users;
-  }, {}),
-});
+export const deserializeState = (obj: DeepReadonly<SerializedState>): State => {
+  const partialState: State = {
+    id: obj[1],
+    name: obj[2],
+    devices: {},
+    users: {},
+  };
+
+  return {
+    ...partialState,
+    devices: obj[3].reduce<{ [index: string]: Device }>(
+      (devices, serializedDevice) => {
+        const device: Device = deserializeUnknownDevice(partialState)(
+          serializedDevice,
+        );
+        devices[device.id] = device;
+        return devices;
+      },
+      {},
+    ),
+    users: obj[4].reduce<{ [index: string]: User }>((users, serializedUser) => {
+      const user: User = deserializeUnknownUser(partialState)(serializedUser);
+      users[user.id] = user;
+      return users;
+    }, {}),
+  };
+};

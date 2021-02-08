@@ -1,47 +1,73 @@
 import { Document, model, Schema, Types } from 'mongoose';
-import { ModelScopes } from './base';
-import { StateDocument, StateModel } from './state';
+import {
+  Serialized,
+  deserializeState,
+  serializeState,
+} from 'domotype-store/serializers';
+import { State } from 'domotype-store';
+import { UserModel, UserDocument } from './user';
+import {
+  SerializedUnknownDevice,
+  SerializedUnknownUser,
+} from 'domotype-store/serializers/models';
+import { SerializedTypes } from 'domotype-store/serializers/types';
+import { DeepReadonly } from 'partially-shared-store';
 
 export interface HomeDocument extends Document {
-  stateId: Types.ObjectId;
   name: string;
-  serialize: (scope?: ModelScopes) => any;
-  getState: () => Promise<StateDocument>;
-  setState: (state: StateDocument) => Promise<void>;
+  serializedDevices: SerializedUnknownDevice[];
+  users: Types.ObjectId[];
+
+  serialize: () => Promise<Serialized<State>>;
+  deserialize: () => Promise<State>;
+
+  fromState: (state: DeepReadonly<State>) => HomeDocument;
 }
 
 const HomeSchema = new Schema<HomeDocument>({
-  stateId: {
-    type: Schema.Types.ObjectId,
-    ref: 'State',
-  },
   name: {
     type: String,
   },
+  serializedDevices: {
+    type: Schema.Types.Mixed,
+  },
+  users: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  ],
 });
 
-HomeSchema.methods.serialize = function (
-  scope: ModelScopes = ModelScopes.Public,
-) {
-  const obj = this.toObject();
-  obj.id = obj._id;
-  delete obj._id;
-  delete obj.__v;
-  return obj;
+HomeSchema.methods.serialize = async function (): Promise<Serialized<State>> {
+  const userDocs: UserDocument[] = await UserModel.find({
+    _id: { $in: this.users },
+  }).exec();
+  const users: SerializedUnknownUser[] = userDocs.map((doc) => doc.serialize());
+  return [
+    SerializedTypes.State,
+    this._id.toString(),
+    this.name,
+    this.serializedDevices || [],
+    users,
+  ];
 };
 
-HomeSchema.methods.getState = async function (): Promise<StateDocument> {
-  const state = await StateModel.findById(this.stateId);
-  if (!state) {
-    throw Error(
-      `Home with id '${this._id}' has associated invalid stateId '${this.stateId}'`,
-    );
-  }
-  return state;
+HomeSchema.methods.deserialize = async function (): Promise<State> {
+  return deserializeState(await this.serialize());
 };
 
-HomeSchema.methods.setState = async function (state: StateDocument) {
-  this.stateId = state._id;
-  await this.save();
+HomeSchema.methods.fromState = function (
+  state: DeepReadonly<State>,
+): HomeDocument {
+  const [_, _id, name, serializedDevices, _2] = serializeState(state);
+  this._id = _id;
+  this.name = name;
+  this.serializedDevices = serializedDevices;
+  this.users = Object.keys(state.users).map((userId) =>
+    Types.ObjectId.createFromHexString(userId),
+  );
+  return this;
 };
+
 export const HomeModel = model<HomeDocument>('Home', HomeSchema);
