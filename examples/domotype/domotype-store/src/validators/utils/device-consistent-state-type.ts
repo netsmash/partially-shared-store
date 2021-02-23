@@ -29,30 +29,33 @@ export const isDeviceStateTypeConsistent = (deviceType: DeviceType) => (
           `Device state for bulb 'intensity' property is not in range 0-100.`,
         );
       }
+      break;
     case DeviceType.Blind:
       if (!('raised' in deviceState)) {
         throw new ValidationError(
-          `Device state for bulb has not 'raised' property.`,
+          `Device state for blind has not 'raised' property.`,
         );
       } else if (typeof deviceState.raised !== 'boolean') {
         throw new ValidationError(
-          `Device state for bulb 'raised' property is not a boolean.`,
+          `Device state for blind 'raised' property is not a boolean.`,
         );
       }
+      break;
     case DeviceType.Thermostat:
       if (!('temperature' in deviceState)) {
         throw new ValidationError(
-          `Device state for bulb has not 'temperature' property.`,
+          `Device state for thermostat has not 'temperature' property.`,
         );
       } else if (typeof deviceState.temperature !== 'number') {
         throw new ValidationError(
-          `Device state for bulb 'temperature' property is not a number.`,
+          `Device state for thermostat 'temperature' property is not a number.`,
         );
       } else if (deviceState.temperature > 50 || deviceState.temperature < 5) {
         throw new ValidationError(
-          `Device state for bulb 'temperature' property is not in range 5-50.`,
+          `Device state for thermostat 'temperature' property is not in range 5-50.`,
         );
       }
+      break;
     default:
       throw new ValidationError(`Device type is not recognized`);
   }

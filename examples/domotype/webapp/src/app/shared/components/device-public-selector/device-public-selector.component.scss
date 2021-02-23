@@ -1,0 +1,21 @@
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  width: 20px;
+  height: 20px;
+
+  background-color: var(--primary-background-color);
+  border-radius: 50%;
+  border: 1px dashed var(--primary-border-color);
+
+  cursor: pointer;
+}
+
+:host-context(.disabled) {
+  cursor: inherit;
+  box-shadow: none;
+  border: none;
+  background-color: transparent;
+}

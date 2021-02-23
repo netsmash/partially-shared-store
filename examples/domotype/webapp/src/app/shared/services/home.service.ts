@@ -30,6 +30,24 @@ export class HomeService {
       .pipe(map((receivedHomes) => receivedHomes.map(parseHome)));
   }
 
+  public requestAddUserToHome(homeId: string) {
+    return (userId: string) => {
+      const url: string = `${environment.server.url}/homes/${homeId}`;
+      const headers = new HttpHeaders({
+        'content-type': 'application/json',
+      });
+
+      const data = {
+        operation: 'addUser',
+        userId,
+      };
+
+      return this.http
+        .patch<ReceivedHome>(url, data, { headers })
+        .pipe(map(parseHome));
+    };
+  }
+
   public createHome(data: RequestedNewHome): Observable<Home> {
     const url: string = `${environment.server.url}/homes`;
     const headers = new HttpHeaders({

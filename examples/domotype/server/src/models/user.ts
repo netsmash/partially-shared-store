@@ -19,6 +19,7 @@ const UserSchema = new Schema<UserDocument>(
     displayName: {
       type: String,
       required: true,
+      unique: true,
     },
     imageUrl: {
       type: String,

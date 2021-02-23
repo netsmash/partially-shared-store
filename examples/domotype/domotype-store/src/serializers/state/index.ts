@@ -40,22 +40,25 @@ export const deserializeState = (obj: DeepReadonly<SerializedState>): State => {
     users: {},
   };
 
-  return {
-    ...partialState,
-    devices: obj[3].reduce<{ [index: string]: Device }>(
-      (devices, serializedDevice) => {
-        const device: Device = deserializeUnknownDevice(partialState)(
-          serializedDevice,
-        );
-        devices[device.id] = device;
-        return devices;
-      },
-      {},
-    ),
-    users: obj[4].reduce<{ [index: string]: User }>((users, serializedUser) => {
+  partialState.users = obj[4].reduce<{ [index: string]: User }>(
+    (users, serializedUser) => {
       const user: User = deserializeUnknownUser(partialState)(serializedUser);
       users[user.id] = user;
       return users;
-    }, {}),
-  };
+    },
+    {},
+  );
+
+  partialState.devices = obj[3].reduce<{ [index: string]: Device }>(
+    (devices, serializedDevice) => {
+      const device: Device = deserializeUnknownDevice(partialState)(
+        serializedDevice,
+      );
+      devices[device.id] = device;
+      return devices;
+    },
+    {},
+  );
+
+  return partialState;
 };

@@ -10,6 +10,7 @@ import {
   serializeIdentificable,
   deserializeIdentificable,
 } from '../identificable';
+import { deserializeKnownUser, serializeKnownUser } from '../models';
 
 export type SerializedCloneActionRequest = [
   SerializedTypes.ActionRequest,
@@ -22,7 +23,7 @@ export const serializeClone = (state: DeepReadonly<State>) => (
 ): SerializedCloneActionRequest => [
   SerializedTypes.ActionRequest,
   ART.Clone,
-  serializeIdentificable(state)(obj.author),
+  serializeKnownUser(state)(obj.author),
 ];
 
 export const deserializeClone = (state: DeepReadonly<State>) => (
@@ -30,6 +31,5 @@ export const deserializeClone = (state: DeepReadonly<State>) => (
 ): ActionRequest<ART.Clone> => ({
   ...deserializeIdentificable(state)(obj[2]),
   type: ART.Clone,
-  author: deserializeIdentificable(state)(obj[2]),
+  author: deserializeKnownUser(state)(obj[2]),
 });
-

@@ -1,0 +1,32 @@
+<app-card>
+	<form
+		[formGroup]="deviceForm"
+	>
+		<header>
+			<app-device-type
+				class="avatar"
+				[type]="device.type"
+			></app-device-type>
+			<div class="title">{{ device.name }}</div>
+			<form
+				[formGroup]="devicePublicForm"
+			>
+				<app-device-public-selector
+					formControlName="public"
+				></app-device-public-selector>
+			</form>
+			<button
+				*ngIf="isOwn"
+				class="remove-button"
+				(click)="removeDevice()">
+					<app-remove></app-remove>
+			</button>
+		</header>
+		<main>
+			<app-device-state-selector
+				[type]="device.type"
+				formControlName="state"
+			></app-device-state-selector>
+		</main>
+	</form>
+</app-card>

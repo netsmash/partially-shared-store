@@ -2,25 +2,27 @@ import { DeepReadonly } from 'partially-shared-store';
 import { State } from '../state';
 import { ActionRequest, ActionRequestTypes as ART } from '../action-requests';
 import { Action, ActionTypes as AT, createAction } from '../actions';
-import { createIdentificable } from '../identificable';
+import { createIdentificable, toIdentificable } from '../identificable';
 import { Device } from '../models';
 
 export const addDevicePlanner = (
   state: DeepReadonly<State>,
   request: ActionRequest<ART.AddDevice>,
 ): [Action<AT.AddDevice>] => {
-  const device = {
-    ...createIdentificable,
+  const device: Device = {
+    ...createIdentificable(),
     type: request.deviceType,
-    name: '' || request.info.name,
-    description: '' || request.info.description,
+    name: request.info.name || '',
+    description: request.info.description || '',
     state: request.state,
-  } as Device;
+    owner: request.author,
+    public: false,
+  };
 
   return [
     createAction(AT.AddDevice)({
       device,
-      target: request.author,
+      targets: new Set([toIdentificable(request.author)]),
     }),
   ];
 };

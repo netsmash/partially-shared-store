@@ -1,15 +1,13 @@
 <header>
-	<h1>Title</h1>
+	<h1 *ngIf="(title$ | async) as title">{{title}}</h1>
 </header>
 <div class='layout'>
 	<div class='sidenav sidenav-left'>
 		<div class='section-index'>
-			<h3>Sections</h3>
-			<ul>
-				<li>Section 1</li>
-				<li>Section 2</li>
-				<li>Section 3</li>
-			</ul>
+			<h3 *ngIf="(schemaService.title$ | async) as title">{{title}}</h3>
+			<ol *ngIf="(schemaService.items$ | async) as items">
+				<li *ngFor="let item of items">{{item}}</li>
+			</ol>
 		</div>
 	</div>
 	<div class='sidenav sidenav-right'></div>

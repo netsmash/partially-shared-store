@@ -1,6 +1,22 @@
-<header>
-	{{home.name}}
-</header>
-<footer>
-	<app-button [routerLink]="['/homes/'+home.id]" class="flat">Connect</app-button>
-</footer>
+<app-card>
+	<header>
+		<div class="title">{{home.name}}</div>
+	</header>
+	<main>
+		<div class="users">
+			<div class="user-names">{{getUserNamesText()}}.</div>
+				<form class="add-user"
+					[formGroup]="addUserForm"
+					(ngSubmit)="addUserHandler()">
+					<app-input-text
+						label="User name"
+						formControlName="displayName"
+					></app-input-text>
+					<app-button class="flat" (click)="addUserHandler()">Add</app-button>
+				</form>
+		</div>
+	</main>
+	<footer>
+		<app-button [routerLink]="['/homes/'+home.id]" class="flat">Connect</app-button>
+	</footer>
+</app-card>

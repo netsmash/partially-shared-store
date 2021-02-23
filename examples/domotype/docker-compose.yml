@@ -64,6 +64,7 @@ services:
       AUTH_KEY_ALG: RS256
     volumes:
         - ./server/src:/usr/app/examples/domotype/server/src
+        - ./domotype-store:/usr/app/examples/domotype/domotype-store
     depends_on:
         - server-db
 

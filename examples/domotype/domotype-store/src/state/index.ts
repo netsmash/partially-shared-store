@@ -1,6 +1,6 @@
 import { DeepReadonly } from 'partially-shared-store';
 import { createIdentificable, Id } from '../identificable';
-import { Device, User } from '../models';
+import { copyDevicesDict, copyUsersDict, Device, User } from '../models';
 
 export interface State {
   id: Id;
@@ -16,12 +16,8 @@ export interface State {
 export const copyState = (state: DeepReadonly<State>): State => ({
   id: state.id,
   name: state.name,
-  devices: {
-    ...state.devices,
-  },
-  users: {
-    ...state.users,
-  },
+  devices: copyDevicesDict(state.devices),
+  users: copyUsersDict(state.users),
 });
 
 export const createInitialState = (): State => ({

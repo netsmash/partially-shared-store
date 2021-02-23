@@ -42,3 +42,13 @@ export const copyDevice = (device: DeepReadonly<Device>): Device => ({
   ...device,
   ...copyIdentificable(toIdentificable(device)),
 });
+
+export type DevicesDict = { [index: string]: Device };
+
+export const copyDevicesDict = (devices: DevicesDict): DevicesDict => {
+  const devicesCopy: DevicesDict = {};
+  for (let key of Object.keys(devices)) {
+    devicesCopy[key] = copyDevice(devices[key]);
+  }
+  return devicesCopy;
+};

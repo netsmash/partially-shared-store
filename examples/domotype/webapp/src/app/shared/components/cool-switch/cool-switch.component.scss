@@ -1,0 +1,50 @@
+:host {
+  --size: 24px;
+  --toggle-size: 20px;
+  --padding: calc((var(--size) - var(--toggle-size)) / 2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: calc(2 * var(--size));
+  height: var(--size);
+  div {
+    display: flex;
+    align-items: center;
+    padding: 0;
+    border-radius: var(--primary-border-radius);
+    width: calc(2 * var(--size));
+    height: var(--size);
+    background: var(--primary-background-color);
+    box-shadow: inset 0px 0px 0px 1px var(--primary-border-color);
+    /*inset 0px 0px 1px 1px var(--primary-light-color);*/
+    transition: 1s;
+  }
+
+  div::after {
+    content: '';
+    display: flex;
+    border-radius: var(--primary-border-radius);
+    margin: var(--padding);
+    width: var(--toggle-size);
+    height: var(--toggle-size);
+    background-color: var(--primary-surface-color);
+    box-shadow: 0px 2px 4px -1px #a4a4a4,
+      0px 0px 0px 1px var(--primary-border-color);
+    transition: 0.5s;
+  }
+
+  cursor: pointer;
+}
+
+:host-context(.active) {
+  div {
+    box-shadow: inset 0px 0px 2px 2px var(--primary-light-color);
+  }
+
+  div::after {
+    transform: translateX(var(--size));
+    background-color: var(--primary-color);
+    box-shadow: 0px 2px 4px -1px var(--primary-color),
+      0px 0px 0px 1px var(--primary-light-color);
+  }
+}

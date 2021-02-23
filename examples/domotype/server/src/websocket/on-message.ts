@@ -22,6 +22,21 @@ const store = StoreService.getInstance();
 const wsManager = WsManagementService.getInstance();
 const taskService = TaskService.getInstance();
 
+const getTargets = (home: HomeDocument) => (action: Action): Set<WebSocket> => {
+  if (action.targets) {
+    const targets = new Set(
+      [...action.targets]
+        .map((target) => target.id)
+        .map(Types.ObjectId.createFromHexString)
+        .map((userId) => wsManager.get(userId, home._id) as WebSocket),
+    );
+    return targets;
+  } else {
+    const targets = wsManager.getTfromB(home._id);
+    return targets;
+  }
+};
+
 export const onMessage = (
   _: UserDocument,
   _2: HomeDocument,
@@ -30,7 +45,7 @@ export const onMessage = (
   taskService.queue(async () => {
     const user = await wsManager.getUser(ws);
     const home = await wsManager.getHome(ws);
-    console.log(`(${user._id}) ${user.displayName}:`, data);
+    console.log(`<- (${user._id}) ${user.displayName}:`, data);
 
     // deserialize
     const actualState = await home.deserialize();
@@ -58,23 +73,19 @@ export const onMessage = (
     const actions: Action[] = store.plan(request, actualState);
     let newState: DeepReadonly<State> = actualState;
 
+    const getTargetsForHome = getTargets(home);
+
     // for each action
     for (const action of actions) {
       // dispatch
-      newState = await store.dispatch(action, newState);
+      if (!action.serverIgnore) {
+        newState = await store.dispatch(action, newState);
+      }
       // save
       home.fromState(newState);
       await home.save();
       // send
-      const targets: WebSocket[] = action.target
-        ? [
-            wsManager.get(
-              Types.ObjectId.createFromHexString(action.target.id),
-              home._id,
-            ) as WebSocket,
-          ]
-        : Array.from(wsManager.getTfromB(home._id));
-
+      const targets = getTargetsForHome(action);
       for (const ws of targets) {
         const user = await wsManager.getUser(ws);
         // shadow
@@ -83,8 +94,10 @@ export const onMessage = (
         )(action);
         // serialize
         const serializedAction = serializeAction(newState)(shadedAction);
+        const data = JSON.stringify(serializedAction);
         // send
-        ws.send(JSON.stringify(serializedAction));
+        console.log(`-> (${user._id}) ${user.displayName}:`, data);
+        ws.send(data);
       }
     }
     // ignore

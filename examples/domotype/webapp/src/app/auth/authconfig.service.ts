@@ -4,7 +4,7 @@ import {
   NullValidationHandler,
   OAuthService,
 } from 'angular-oauth2-oidc';
-import { filter, tap, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { environment } from '@env/environment';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
