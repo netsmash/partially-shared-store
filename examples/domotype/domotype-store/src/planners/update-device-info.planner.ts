@@ -16,9 +16,8 @@ export const updateDeviceInfoPlanner = (
   };
 
   if (!device.public) {
-    payload.target = toIdentificable(device.owner);
+    payload.targets = new Set([toIdentificable(device.owner)]);
   }
 
   return [createAction(AT.UpdateDeviceInfo)(payload)];
 };
-

@@ -5,6 +5,9 @@ import { State as HomeState } from 'domotype-store';
 import { Observable } from 'rxjs';
 import { HomeStore } from '@app/shared/utils';
 import { HomeService } from '@app/shared/services/home.service';
+import { TitleService } from '@app/shared/services/title.service';
+import { Device } from 'domotype-store/models';
+import { SchemaService } from '@app/shared/services/schema.service';
 
 @Component({
   selector: 'app-home-detail',
@@ -12,14 +15,19 @@ import { HomeService } from '@app/shared/services/home.service';
   styleUrls: ['./home-detail.component.scss'],
 })
 export class HomeDetailComponent implements OnInit, OnDestroy {
-  protected homeStore$: Observable<HomeStore>;
+  public homeStore$: Observable<HomeStore>;
   public home$?: Observable<HomeState>;
+  public devices$?: Observable<Device[]>;
   public homeId?: string;
 
   constructor(
     private route: ActivatedRoute,
     private homeService: HomeService,
-  ) {}
+    private titleService: TitleService,
+    protected schemaService: SchemaService,
+  ) {
+    this.schemaService.setTitle('Devices');
+  }
 
   ngOnInit(): void {
     this.homeStore$ = this.route.paramMap.pipe(
@@ -27,7 +35,16 @@ export class HomeDetailComponent implements OnInit, OnDestroy {
       tap((homeId) => (this.homeId = homeId)),
       mergeMap((homeId) => this.homeService.getStore(homeId)),
     );
-    this.home$ = this.homeStore$.pipe(mergeMap((store) => store.state$));
+    this.home$ = this.homeStore$.pipe(
+      mergeMap((store) => store.state$),
+      tap((state) => this.titleService.setTitle(state.name)),
+    );
+    this.devices$ = this.home$.pipe(
+      map((state) => Object.values(state.devices)),
+      tap((homes) =>
+        this.schemaService.setItems(homes.map((home) => home.name)),
+      ),
+    );
   }
 
   ngOnDestroy(): void {

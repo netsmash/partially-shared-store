@@ -1,18 +1,7 @@
 import { DeepReadonly } from 'partially-shared-store';
 import { TaskQueuer } from 'partially-shared-store/utils';
-import {
-  Store,
-  createInitialState,
-  Id,
-  toIdentificable,
-  State,
-  createStore,
-} from 'domotype-store';
-import {
-  Action,
-  createAction,
-  ActionTypes as AT,
-} from 'domotype-store/actions';
+import { Store, Id, toIdentificable, State, createStore } from 'domotype-store';
+import { Action } from 'domotype-store/actions';
 import {
   ActionRequest,
   createActionRequest,
@@ -52,13 +41,17 @@ export class HomeStore {
   > = this.stateSource.asObservable();
 
   constructor(
-    protected user: User,
+    protected _user: User,
     protected homeId: Id,
     protected ticket: Ticket,
   ) {
     this.connect();
     this.stateToSource();
     this.taskQueuer.start();
+  }
+
+  public get user(): User {
+    return this._user;
   }
 
   protected connect(): void {
@@ -90,7 +83,12 @@ export class HomeStore {
         const action: Action = deserializeAction(this.store.currentState)(
           serializedAction,
         );
+        console.groupCollapsed('[Partially Shared Store] Home Store');
+        console.log('prev state', this.store.currentState);
+        console.log('action', action);
         await this.store.dispatch(action);
+        console.log('next state', this.store.currentState);
+        console.groupEnd();
       }),
     );
 

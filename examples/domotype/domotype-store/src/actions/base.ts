@@ -4,6 +4,6 @@ import { ActionTypes as AT } from './types';
 
 export type ActionBase = Action<Identificable, AT> & {
   type: AT;
-  target?: Identificable;
-  exceptFor?: Identificable;
+  targets?: Set<Identificable>;
+  serverIgnore?: true;
 };

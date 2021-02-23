@@ -1,0 +1,36 @@
+<app-card>
+	<form
+		[formGroup]="deviceForm"
+		(ngSubmit)="createDevice()"
+	>
+
+			<header>
+				<app-device-type-selector
+					class="avatar"
+					formControlName="deviceType"
+				></app-device-type-selector>
+				<ng-container formGroupName="info">
+					<app-input-text
+						label="Device name"
+						formControlName="name"></app-input-text>
+				</ng-container>
+			</header>
+			<main>
+				<app-device-state-selector
+					[type]="deviceForm.value.deviceType"
+					formControlName="state"
+				></app-device-state-selector>
+				<ng-container formGroupName="info">
+					<app-input-text-multiline
+						label="Device description"
+						formControlName="description"
+					></app-input-text-multiline>
+				</ng-container>
+			</main>
+		<footer>
+			<app-button (click)="createDevice()">
+				<app-add-circle-outline></app-add-circle-outline> Add device
+			</app-button>
+		</footer>
+	</form>
+</app-card>

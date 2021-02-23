@@ -10,6 +10,10 @@ import {
   requestNewHome,
   requestNewHomeFailure,
   requestNewHomeSuccess,
+  requestAddUserToHome,
+  requestAddUserToHomeSuccess,
+  requestAddUserToHomeFailure,
+  updateHome,
 } from './actions';
 import { HomeService } from '@app/shared/services/home.service';
 
@@ -40,6 +44,32 @@ export class HomesEffects {
           ),
         ),
       ),
+    { dispatch: true },
+  );
+
+  requestAddUserToHome$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(requestAddUserToHome),
+        mergeMap((action) =>
+          this.homeService
+            .requestAddUserToHome(action.homeId)(action.userId)
+            .pipe(
+              map((home: Home) => requestAddUserToHomeSuccess({ home })),
+              catchError((error) => of(requestAddUserToHomeFailure({ error }))),
+            ),
+        ),
+      ),
+    { dispatch: true },
+  );
+
+  requestAddUserToHomeSuccess$ = createEffect(
+    () =>
+      this.actions$.pipe(
+        ofType(requestAddUserToHomeSuccess),
+        mergeMap((action) => of(updateHome({ home: action.home }))),
+      ),
+
     { dispatch: true },
   );
 

@@ -1,0 +1,23 @@
+:host {
+  display: flex;
+  justify-content: flex-end;
+
+  label {
+    display: flex;
+    white-space: nowrap;
+    align-items: center;
+  }
+
+  input[type='range'] {
+    margin-left: 1em;
+    width: 100%;
+  }
+
+  input[type='range'] + app-cool-switch {
+    margin-left: 1em;
+  }
+
+  input[type='range'] {
+    width: 100%;
+  }
+}

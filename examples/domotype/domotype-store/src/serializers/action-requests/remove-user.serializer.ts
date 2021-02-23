@@ -31,7 +31,7 @@ export const serializeRemoveUser = (state: DeepReadonly<State>) => (
   SerializedTypes.ActionRequest,
   ART.RemoveUser,
   serializeIdentificable(state)(toIdentificable(obj)),
-  serializeIdentificable(state)(obj.author),
+  serializeKnownUser(state)(obj.author),
   serializeKnownUser(state)(obj.user),
 ];
 
@@ -40,7 +40,6 @@ export const deserializeRemoveUser = (state: DeepReadonly<State>) => (
 ): ActionRequest<ART.RemoveUser> => ({
   ...deserializeIdentificable(state)(obj[2]),
   type: ART.RemoveUser,
-  author: deserializeIdentificable(state)(obj[3]),
+  author: deserializeKnownUser(state)(obj[3]),
   user: deserializeKnownUser(state)(obj[4]),
 });
-

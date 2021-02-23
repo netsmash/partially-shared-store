@@ -7,13 +7,17 @@ import { toIdentificable } from '../identificable';
 export const publishDevicePlanner = (
   state: DeepReadonly<State>,
   request: ActionRequest<ART.PublishDevice>,
-): [Action<AT.PublishDevice>, Action<AT.AddDevice>] => [
-  createAction(AT.PublishDevice)({
-    device: request.device,
-    target: toIdentificable(request.device.owner),
-  }),
+): [Action<AT.AddDevice>, Action<AT.PublishDevice>] => [
   createAction(AT.AddDevice)({
     device: request.device,
-    exceptFor: toIdentificable(request.device.owner),
+    targets: new Set(
+      Object.values(state.users)
+        .filter((user) => user.id !== request.author.id)
+        .map(toIdentificable),
+    ),
+    serverIgnore: true,
+  }),
+  createAction(AT.PublishDevice)({
+    device: request.device,
   }),
 ];

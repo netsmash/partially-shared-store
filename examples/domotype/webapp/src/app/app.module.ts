@@ -20,6 +20,8 @@ import { appReducers, metaReducers } from '@app/store/reducers';
 import { SharedModule } from '@app/shared/shared.module';
 import { NewHomeItemComponent } from './my-homes/home-list/new-home-item/new-home-item.component';
 import { HomeDetailComponent } from './my-homes/home-detail/home-detail.component';
+import { NewDeviceComponent } from './my-homes/home-detail/devices/new-device/new-device.component';
+import { DeviceListItemComponent } from './my-homes/home-detail/devices/device-list-item/device-list-item.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +31,8 @@ import { HomeDetailComponent } from './my-homes/home-detail/home-detail.componen
     HomeItemComponent,
     NewHomeItemComponent,
     HomeDetailComponent,
+    NewDeviceComponent,
+    DeviceListItemComponent,
   ],
   imports: [
     BrowserModule,

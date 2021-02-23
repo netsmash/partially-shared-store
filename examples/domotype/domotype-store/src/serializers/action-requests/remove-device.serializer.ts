@@ -13,8 +13,10 @@ import {
 import { toIdentificable } from '../../identificable';
 import {
   deserializeKnownDevice,
+  deserializeKnownUser,
   SerializedKnownDevice,
   serializeKnownDevice,
+  serializeKnownUser,
 } from '../models';
 
 export type SerializedRemoveDeviceActionRequest = [
@@ -31,7 +33,7 @@ export const serializeRemoveDevice = (state: DeepReadonly<State>) => (
   SerializedTypes.ActionRequest,
   ART.RemoveDevice,
   serializeIdentificable(state)(toIdentificable(obj)),
-  serializeIdentificable(state)(obj.author),
+  serializeKnownUser(state)(obj.author),
   serializeKnownDevice(state)(obj.device),
 ];
 
@@ -40,7 +42,6 @@ export const deserializeRemoveDevice = (state: DeepReadonly<State>) => (
 ): ActionRequest<ART.RemoveDevice> => ({
   ...deserializeIdentificable(state)(obj[2]),
   type: ART.RemoveDevice,
-  author: deserializeIdentificable(state)(obj[3]),
+  author: deserializeKnownUser(state)(obj[3]),
   device: deserializeKnownDevice(state)(obj[4]),
 });
-

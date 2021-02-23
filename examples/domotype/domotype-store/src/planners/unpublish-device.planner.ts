@@ -10,11 +10,14 @@ export const unpublishDevicePlanner = (
 ): [Action<AT.UnpublishDevice>, Action<AT.RemoveDevice>] => [
   createAction(AT.UnpublishDevice)({
     device: request.device,
-    target: toIdentificable(request.device.owner),
   }),
   createAction(AT.RemoveDevice)({
     device: request.device,
-    exceptFor: toIdentificable(request.device.owner),
+    targets: new Set(
+      Object.values(state.users)
+        .filter((user) => user.id !== request.author.id)
+        .map(toIdentificable),
+    ),
+    serverIgnore: true,
   }),
 ];
-

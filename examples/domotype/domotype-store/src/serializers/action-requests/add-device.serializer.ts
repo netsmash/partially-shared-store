@@ -14,10 +14,12 @@ import { toIdentificable } from '../../identificable';
 import {
   deserializeDeviceInfo,
   deserializeDeviceState,
+  deserializeKnownUser,
   SerializedDeviceInfo,
   SerializedDeviceState,
   serializeDeviceInfo,
   serializeDeviceState,
+  serializeKnownUser,
 } from '../models';
 import { DeviceType } from '../../models';
 
@@ -37,7 +39,7 @@ export const serializeAddDevice = (state: DeepReadonly<State>) => (
   SerializedTypes.ActionRequest,
   ART.AddDevice,
   serializeIdentificable(state)(toIdentificable(obj)),
-  serializeIdentificable(state)(obj.author),
+  serializeKnownUser(state)(obj.author),
   obj.deviceType,
   serializeDeviceInfo(state)(obj.info),
   serializeDeviceState(state)(obj.deviceType)(obj.state),
@@ -48,9 +50,8 @@ export const deserializeAddDevice = (state: DeepReadonly<State>) => (
 ): ActionRequest<ART.AddDevice> => ({
   ...deserializeIdentificable(state)(obj[2]),
   type: ART.AddDevice,
-  author: deserializeIdentificable(state)(obj[3]),
+  author: deserializeKnownUser(state)(obj[3]),
   deviceType: obj[4],
   info: deserializeDeviceInfo(state)(obj[5]),
   state: deserializeDeviceState(state)(obj[4])(obj[6]),
 });
-

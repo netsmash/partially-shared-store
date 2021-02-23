@@ -1,0 +1,19 @@
+:host {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: stretch;
+  width: 100%;
+  header {
+    .title {
+      flex: 1 1;
+    }
+    .remove-button {
+      display: flex;
+      border: 0;
+      background-color: transparent;
+      align-items: center;
+      cursor: pointer;
+    }
+  }
+}

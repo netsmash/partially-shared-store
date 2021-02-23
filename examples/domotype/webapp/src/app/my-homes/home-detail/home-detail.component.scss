@@ -1,0 +1,9 @@
+:host {
+  display: flex;
+  flex-flow: column;
+  align-items: stretch;
+
+  app-device-list-item + * {
+    margin-top: 1em;
+  }
+}

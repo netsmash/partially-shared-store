@@ -1,3 +1,9 @@
-<ng-container *ngIf="(home$ | async) as home">
-	<h2>{{home.name}}</h2>
+<ng-container *ngIf="(homeStore$ | async) as homeStore">
+	<ng-container *ngIf="(devices$ | async ) as devices">
+		<app-device-list-item
+			*ngFor="let device of devices"
+			[homeStore]="homeStore"
+			[device]="device"></app-device-list-item>
+		<app-new-device [homeStore]="homeStore"></app-new-device>
+	</ng-container>
 </ng-container>

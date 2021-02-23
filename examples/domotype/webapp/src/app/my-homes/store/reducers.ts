@@ -1,5 +1,4 @@
 import { createReducer, on } from '@ngrx/store';
-import { parseHome } from '../../models/Home';
 import * as HomesActions from './actions';
 import { initialHomesState } from './state';
 
@@ -39,6 +38,23 @@ export const homesReducer = createReducer(
     loading: false,
   })),
   on(HomesActions.requestNewHomeFailure, (state, { error }) => ({
+    ...state,
+    error,
+    loading: false,
+  })),
+  on(HomesActions.requestAddUserToHome, (state) => ({
+    ...state,
+    loading: true,
+  })),
+  on(HomesActions.updateHome, (state, { home }) => ({
+    ...state,
+    homes: {
+      ...state.homes,
+      [home.id]: home,
+    },
+    loading: false,
+  })),
+  on(HomesActions.requestAddUserToHomeFailure, (state, { error }) => ({
     ...state,
     error,
     loading: false,

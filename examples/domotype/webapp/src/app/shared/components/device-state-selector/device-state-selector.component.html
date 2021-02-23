@@ -1,0 +1,21 @@
+<ng-container [ngSwitch]="type">
+	<ng-container *ngSwitchCase="DeviceType.Bulb">
+		<label>{{bulbIntensity}}%</label>
+		<input type="range"
+			[(value)]="bulbIntensityStr"
+			max=100 min=0
+			(change)="onChangeBulbIntensity($event)"/>
+		<app-cool-switch [(value)]="bulbOn" (click)="onStateChange()"></app-cool-switch>
+	</ng-container>
+	<ng-container *ngSwitchCase="DeviceType.Blind">
+		<app-cool-switch [(value)]="blindRaised" (click)="onStateChange()"></app-cool-switch>
+	</ng-container>
+	<ng-container *ngSwitchCase="DeviceType.Thermostat">
+			<label>{{thermostatTemperature}} &#176;C</label>
+			<input type="range"
+				[(value)]="thermostatTemperatureStr"
+				max=50 min=5
+				(change)="onChangeThermostatTemperature($event)"/>
+	</ng-container>
+	<ng-container *ngSwitchDefault>Unknown</ng-container>
+</ng-container>

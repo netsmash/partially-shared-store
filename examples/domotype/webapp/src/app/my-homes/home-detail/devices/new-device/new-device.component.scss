@@ -1,0 +1,18 @@
+:host {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: stretch;
+  width: 100%;
+
+  app-input-text {
+    margin-left: 1em;
+    width: 100%;
+  }
+
+  main {
+    * + * {
+      margin-top: 1em;
+    }
+  }
+}

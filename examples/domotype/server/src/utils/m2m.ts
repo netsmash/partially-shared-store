@@ -122,7 +122,8 @@ export class ManyToManyThrought<A, B, T> {
     if (!tsFromB) {
       return;
     }
-    return firstElementInIntersection(tsFromA, tsFromB);
+    const element = firstElementInIntersection(tsFromA, tsFromB);
+    return element;
   }
 
   public getA(t: T): A | undefined {
@@ -134,10 +135,10 @@ export class ManyToManyThrought<A, B, T> {
   }
 
   public getTfromA(a: A): Set<T> {
-    return this.mapAT.get(a) || new Set();
+    return new Set(this.mapAT.get(a));
   }
 
   public getTfromB(b: B): Set<T> {
-    return this.mapBT.get(b) || new Set();
+    return new Set(this.mapBT.get(b));
   }
 }

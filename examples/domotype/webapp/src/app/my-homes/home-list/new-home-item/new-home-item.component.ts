@@ -10,14 +10,14 @@ import { requestNewHome } from '@app/my-homes/store/actions';
 })
 export class NewHomeItemComponent implements OnInit {
   public homeForm: FormGroup = this.fb.group({
-    name: ['New home name'],
+    name: [''],
   });
 
   constructor(private fb: FormBuilder, private store: Store) {}
 
   ngOnInit(): void {
     this.homeForm = this.fb.group({
-      name: ['New home name'],
+      name: [''],
     });
   }
 

@@ -22,6 +22,7 @@ export interface HomeDocument extends Document {
   deserialize: () => Promise<State>;
 
   fromState: (state: DeepReadonly<State>) => HomeDocument;
+  hasUser: (user: Types.ObjectId) => boolean;
 }
 
 const HomeSchema = new Schema<HomeDocument>({
@@ -68,6 +69,10 @@ HomeSchema.methods.fromState = function (
     Types.ObjectId.createFromHexString(userId),
   );
   return this;
+};
+
+HomeSchema.methods.hasUser = function (userId: Types.ObjectId): boolean {
+  return this.users.findIndex((homeUserId) => homeUserId.equals(userId)) >= 0;
 };
 
 export const HomeModel = model<HomeDocument>('Home', HomeSchema);
