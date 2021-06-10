@@ -3,9 +3,7 @@ export class IdentityMapping<T, Identificable, ID = string> {
   protected typeToId = new Map<T, ID>();
   protected identities = new Map<ID, Identificable>();
 
-  constructor(
-    protected extractIdentinty: (identificable: Identificable) => ID,
-  ) {}
+  constructor(protected extractIdentinty: (identificable: Identificable) => ID) {}
 
   getAllIdentities(): Identificable[] {
     return Array.from(this.identities.values());

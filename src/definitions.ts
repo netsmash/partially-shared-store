@@ -20,10 +20,7 @@ export type DeepReadonly<T> = T extends Builtin
   ? { readonly [K in keyof T]: DeepReadonly<T[K]> }
   : Readonly<T>;
 
-export type ActionRequest<
-  Identificable = any,
-  ActionRequestTypes = any
-> = Identificable & {
+export type ActionRequest<Identificable = any, ActionRequestTypes = any> = Identificable & {
   type: ActionRequestTypes;
 };
 
@@ -31,10 +28,7 @@ export type Action<Identificable = any, ActionTypes = any> = Identificable & {
   type: ActionTypes;
 };
 
-export type Validator<
-  CustomState,
-  CustomActionRequest extends ActionRequest
-> = (
+export type Validator<CustomState, CustomActionRequest extends ActionRequest> = (
   state: DeepReadonly<CustomState>,
   actionRequest: CustomActionRequest,
 ) => void;
