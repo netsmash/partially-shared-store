@@ -20,10 +20,7 @@ export type DeepReadonly<T> = T extends Builtin
   ? { readonly [K in keyof T]: DeepReadonly<T[K]> }
   : Readonly<T>;
 
-export type ActionRequest<
-  Identificable = any,
-  ActionRequestTypes = any
-> = Identificable & {
+export type ActionRequest<Identificable = any, ActionRequestTypes = any> = Identificable & {
   type: ActionRequestTypes;
 };
 
@@ -31,20 +28,19 @@ export type Action<Identificable = any, ActionTypes = any> = Identificable & {
   type: ActionTypes;
 };
 
-export type Validator<
-  CustomState,
-  CustomActionRequest extends ActionRequest
-> = (
+type MaybePromise<T> = Promise<T> | T;
+
+export type Validator<CustomState, CustomActionRequest extends ActionRequest> = (
   state: DeepReadonly<CustomState>,
   actionRequest: CustomActionRequest,
-) => void;
+) => MaybePromise<void>;
 
 export type Planner<CustomState, CustomActionRequest extends ActionRequest> = (
   state: DeepReadonly<CustomState>,
   actionRequest: CustomActionRequest,
-) => Action[];
+) => MaybePromise<Action[]>;
 
 export type Reducer<CustomState, CustomAction extends Action> = (
   state: DeepReadonly<CustomState>,
   action: CustomAction,
-) => DeepReadonly<CustomState>;
+) => MaybePromise<DeepReadonly<CustomState>>;

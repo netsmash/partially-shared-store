@@ -15,24 +15,25 @@ export const onMessage = (
   taskQueuer: TaskQueuer,
   idMap: IdentityMapping<WebSocket, Identificable, Identificable['id']>,
 ) => {
-  const planRequest = function (request: ActionRequest): void {
+  const planRequest = async (request: ActionRequest): Promise<void> => {
     try {
-      store.validate(request);
+      await store.validate(request);
     } catch (e) {
       console.error('ValidationError', e.message);
       return;
     }
-    const actions: Action[] = store.plan(request);
-    actions.forEach(dispatchAction);
+    const actions: Action[] = await store.plan(request);
+    for (let action of actions) {
+      await dispatchAction(action);
+    }
   };
 
-  const dispatchAction = function (action: Action) {
+  const dispatchAction = async (action: Action): Promise<void> => {
     if (!isAction(action, ActionTypes.Clone)) {
-      store.dispatch(action);
+      await store.dispatch(action);
     }
 
-    const targets: Identificable[] =
-      'target' in action ? [action.target] : idMap.getAllIdentities();
+    const targets: Identificable[] = 'target' in action ? [action.target] : idMap.getAllIdentities();
 
     targets.forEach((target) => {
       const ws = idMap.getT(target);
@@ -43,11 +44,11 @@ export const onMessage = (
     });
   };
 
-  const onActionRequest = (ws: WebSocket, request: ActionRequest) => {
+  const onActionRequest = async (ws: WebSocket, request: ActionRequest) => {
     const author = idMap.getId(ws);
     if (author) {
       request.author = author;
-      planRequest(request);
+      await planRequest(request);
     }
   };
 
@@ -56,7 +57,7 @@ export const onMessage = (
       const data = JSON.parse(JSON.parse(rawData));
       console.log('RECEIVED:', data);
       if (isActionRequest(data)) {
-        onActionRequest(ws, data);
+        await onActionRequest(ws, data);
       } else {
         console.log('it is NOT an action request');
       }
