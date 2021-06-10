@@ -55,22 +55,22 @@ export class PartiallySharedStore<CustomState, Identificable, ActionRequestTypes
     this.stateNext(state);
   }
 
-  public validate<CustomActionRequest extends ActionRequest<Identificable, ActionRequestTypes>>(
+  public async validate<CustomActionRequest extends ActionRequest<Identificable, ActionRequestTypes>>(
     request: CustomActionRequest,
     state?: DeepReadonly<CustomState>,
-  ): void {
+  ): Promise<void> {
     const validator = this.validatorMapping.get(request.type);
     if (!validator) {
       return;
     }
     state = state || this._state;
-    validator.call(this, state, request);
+    await validator.call(this, state, request);
   }
 
-  public plan<
+  public async plan<
     CustomAction extends Action<Identificable, ActionTypes>,
     CustomActionRequest extends ActionRequest<Identificable, ActionRequestTypes>
-  >(request: CustomActionRequest, state?: DeepReadonly<CustomState>): CustomAction[] {
+  >(request: CustomActionRequest, state?: DeepReadonly<CustomState>): Promise<CustomAction[]> {
     const planner = this.plannerMapping.get(request.type);
     if (!planner) {
       return [];
@@ -88,7 +88,8 @@ export class PartiallySharedStore<CustomState, Identificable, ActionRequestTypes
       return this.currentState;
     }
     state = state || this._state;
-    await this.stateNext(reducer.call(this, state, action));
+    const newState: DeepReadonly<CustomState> = await reducer.call(this, state, action);
+    this.stateNext(newState);
     return this.currentState;
   }
 

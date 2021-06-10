@@ -28,17 +28,19 @@ export type Action<Identificable = any, ActionTypes = any> = Identificable & {
   type: ActionTypes;
 };
 
+type MaybePromise<T> = Promise<T> | T;
+
 export type Validator<CustomState, CustomActionRequest extends ActionRequest> = (
   state: DeepReadonly<CustomState>,
   actionRequest: CustomActionRequest,
-) => void;
+) => MaybePromise<void>;
 
 export type Planner<CustomState, CustomActionRequest extends ActionRequest> = (
   state: DeepReadonly<CustomState>,
   actionRequest: CustomActionRequest,
-) => Action[];
+) => MaybePromise<Action[]>;
 
 export type Reducer<CustomState, CustomAction extends Action> = (
   state: DeepReadonly<CustomState>,
   action: CustomAction,
-) => DeepReadonly<CustomState>;
+) => MaybePromise<DeepReadonly<CustomState>>;
