@@ -1,10 +1,7 @@
 import { Component } from '@angular/core';
 import { PartiallySharedStoreService } from './psstore.service';
 import { map } from 'rxjs/operators';
-import {
-  ActionRequestTypes as ART,
-  createActionRequest,
-} from 'counter-store/action-requests';
+import { ActionRequestTypes as ART, createActionRequest } from 'counter-store/action-requests';
 import { State as CounterState } from 'counter-store/state';
 import { Observable } from 'rxjs';
 
@@ -22,13 +19,11 @@ export class AppComponent {
   value$: Observable<number>;
 
   constructor(private psStore: PartiallySharedStoreService) {
-    this.value$ = this.psStore.state$.pipe(
-      map((state: CounterState) => state.value),
-    );
+    this.value$ = this.psStore.state$.pipe(map((state: CounterState) => state.value));
   }
 
   increment() {
-    this.psStore.dispatch(
+    this.psStore.request(
       createActionRequest(ART.Increment)({
         author: this.psStore.identity,
       }),
@@ -36,7 +31,7 @@ export class AppComponent {
   }
 
   decrement() {
-    this.psStore.dispatch(
+    this.psStore.request(
       createActionRequest(ART.Decrement)({
         author: this.psStore.identity,
       }),

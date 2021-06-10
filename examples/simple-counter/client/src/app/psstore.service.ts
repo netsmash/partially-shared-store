@@ -13,11 +13,7 @@ import {
   Identificable,
   createIdentificable,
 } from 'counter-store';
-import {
-  ActionRequest,
-  createActionRequest,
-  ActionRequestTypes as ART,
-} from 'counter-store/action-requests';
+import { ActionRequest, createActionRequest, ActionRequestTypes as ART } from 'counter-store/action-requests';
 
 type Message = ActionRequest | Action;
 
@@ -42,12 +38,8 @@ export class PartiallySharedStoreService {
 
   public connect(): void {
     if (!this.socket$ || this.socket$.closed) {
-      this.socket$ = webSocket<string>(
-        `ws://localhost:${environment.serverPort}`,
-      );
-      this.responses$ = this.socket$.pipe(
-        map((data: string): Message => (data as unknown) as Message),
-      );
+      this.socket$ = webSocket<string>(`ws://localhost:${environment.serverPort}`);
+      this.responses$ = this.socket$.pipe(map((data: string): Message => (data as unknown) as Message));
       this.responses$.subscribe((data: object) => {
         this.taskQueuer.queue(async () => {
           if (isAction(data)) {
@@ -62,7 +54,7 @@ export class PartiallySharedStoreService {
     const actionRequest = createActionRequest(ART.Clone)({
       author: this.identity,
     });
-    this.dispatch(actionRequest);
+    this.request(actionRequest);
   }
 
   private async stateToSource(): Promise<void> {
@@ -72,13 +64,9 @@ export class PartiallySharedStoreService {
     this.stateSource.complete();
   }
 
-  public send(data: Message) {
-    const parsedData = JSON.stringify(data);
+  public request(actionRequest: ActionRequest) {
+    const parsedData = JSON.stringify(actionRequest);
     this.socket$.next(parsedData);
-  }
-
-  public dispatch(actionRequest: ActionRequest) {
-    this.send(actionRequest);
   }
 
   close() {
