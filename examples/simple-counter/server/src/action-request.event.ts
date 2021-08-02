@@ -1,7 +1,7 @@
 import * as WebSocket from 'ws';
 import { IdentityMapping, TaskQueuer } from 'partially-shared-store/utils';
 import { Identificable, Store } from 'counter-store';
-import { isActionRequest, ActionRequest } from 'counter-store/action-requests';
+import { isRequest, Request } from 'counter-store/action-requests';
 import { Action, isAction, ActionTypes } from 'counter-store/actions';
 
 const send = (ws: WebSocket, data: any) => {
@@ -15,7 +15,7 @@ export const onMessage = (
   taskQueuer: TaskQueuer,
   idMap: IdentityMapping<WebSocket, Identificable, Identificable['id']>,
 ) => {
-  const planRequest = async (request: ActionRequest): Promise<void> => {
+  const planRequest = async (request: Request): Promise<void> => {
     try {
       await store.validate(request);
     } catch (e) {
@@ -44,7 +44,7 @@ export const onMessage = (
     });
   };
 
-  const onActionRequest = async (ws: WebSocket, request: ActionRequest) => {
+  const onRequest = async (ws: WebSocket, request: Request) => {
     const author = idMap.getId(ws);
     if (author) {
       request.author = author;
@@ -56,8 +56,8 @@ export const onMessage = (
     taskQueuer.queue(async () => {
       const data = JSON.parse(JSON.parse(rawData));
       console.log('RECEIVED:', data);
-      if (isActionRequest(data)) {
-        await onActionRequest(ws, data);
+      if (isRequest(data)) {
+        await onRequest(ws, data);
       } else {
         console.log('it is NOT an action request');
       }

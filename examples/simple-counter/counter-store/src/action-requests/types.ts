@@ -1,4 +1,4 @@
-export enum ActionRequestTypes {
+export enum RequestTypes {
   // Default
   Clone,
 

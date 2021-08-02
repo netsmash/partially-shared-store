@@ -13,9 +13,9 @@ import {
   Identificable,
   createIdentificable,
 } from 'counter-store';
-import { ActionRequest, createActionRequest, ActionRequestTypes as ART } from 'counter-store/action-requests';
+import { Request, createRequest, RequestTypes as RT } from 'counter-store/action-requests';
 
-type Message = ActionRequest | Action;
+type Message = Request | Action;
 
 @Injectable({
   providedIn: 'root',
@@ -51,10 +51,10 @@ export class PartiallySharedStoreService {
   }
 
   private requestClone(): void {
-    const actionRequest = createActionRequest(ART.Clone)({
+    const request = createRequest(RT.Clone)({
       author: this.identity,
     });
-    this.request(actionRequest);
+    this.request(request);
   }
 
   private async stateToSource(): Promise<void> {
@@ -64,8 +64,8 @@ export class PartiallySharedStoreService {
     this.stateSource.complete();
   }
 
-  public request(actionRequest: ActionRequest) {
-    const parsedData = JSON.stringify(actionRequest);
+  public request(request: Request) {
+    const parsedData = JSON.stringify(request);
     this.socket$.next(parsedData);
   }
 

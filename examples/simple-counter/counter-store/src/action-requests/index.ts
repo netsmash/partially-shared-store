@@ -1,38 +1,27 @@
-import { ActionRequestTypes as ART } from './types';
-import { CloneActionRequest } from './clone.action-request';
-import { IncrementActionRequest } from './increment.action-request';
-import { DecrementActionRequest } from './decrement.action-request';
+import { RequestTypes as RT } from './types';
+import { CloneRequest } from './clone.action-request';
+import { IncrementRequest } from './increment.action-request';
+import { DecrementRequest } from './decrement.action-request';
 import { createIdentificable } from '../identificable';
 
-type AnyActionRequest =
-  | CloneActionRequest
-  | IncrementActionRequest
-  | DecrementActionRequest;
+type AnyRequest = CloneRequest | IncrementRequest | DecrementRequest;
 
-export type ActionRequest<T extends ART = ART> = T extends ART.Clone
-  ? CloneActionRequest
-  : T extends ART.Increment
-  ? IncrementActionRequest
-  : T extends ART.Decrement
-  ? DecrementActionRequest
-  : AnyActionRequest;
+export type Request<T extends RT = RT> = T extends RT.Clone
+  ? CloneRequest
+  : T extends RT.Increment
+  ? IncrementRequest
+  : T extends RT.Decrement
+  ? DecrementRequest
+  : AnyRequest;
 
-export const isActionRequest = <T extends ART>(
-  obj: any,
-  type?: T,
-): obj is ActionRequest<T> =>
-  typeof obj === 'object' &&
-  'type' in obj &&
-  obj.type in ART &&
-  (type === undefined || obj.type === type);
+export const isRequest = <T extends RT>(obj: any, type?: T): obj is Request<T> =>
+  typeof obj === 'object' && 'type' in obj && obj.type in RT && (type === undefined || obj.type === type);
 
-export const createActionRequest = <T extends ART>(type: T) => (
-  obj: Omit<ActionRequest<T>, 'id' | 'type'>,
-): ActionRequest<T> =>
+export const createRequest = <T extends RT>(type: T) => (obj: Omit<Request<T>, 'id' | 'type'>): Request<T> =>
   (({
     ...createIdentificable(),
     type,
     ...obj,
-  } as unknown) as ActionRequest<T>);
+  } as unknown) as Request<T>);
 
 export * from './types';

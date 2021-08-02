@@ -1,8 +1,8 @@
-import { ActionRequest } from 'partially-shared-store';
+import { Request } from 'partially-shared-store';
 import { Identificable } from '../identificable';
-import { ActionRequestTypes as ART } from './types';
+import { RequestTypes as RT } from './types';
 
-export type IncrementActionRequest = ActionRequest<Identificable, ART> & {
-  type: ART.Increment;
+export type IncrementRequest = Request<Identificable, RT> & {
+  type: RT.Increment;
   author: Identificable;
 };
