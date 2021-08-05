@@ -1,7 +1,7 @@
 import { Action, Request, DeepReadonly, Planner, Reducer, Validator } from './definitions';
 import { deepFreeze } from './utils';
 
-export class PartiallySharedStore<CustomState, Identificable, RequestTypes = any, ActionTypes = any> {
+export class PartiallySharedStore<CustomState, RequestTypes = any, ActionTypes = any> {
   protected validatorMapping = new Map<RequestTypes, Validator<CustomState, any>>();
   protected plannerMapping = new Map<RequestTypes, Planner<CustomState, any>>();
   protected reducerMapping = new Map<ActionTypes, Reducer<CustomState, any>>();
@@ -55,7 +55,7 @@ export class PartiallySharedStore<CustomState, Identificable, RequestTypes = any
     this.stateNext(state);
   }
 
-  public async validate<CustomRequest extends Request<Identificable, RequestTypes>>(
+  public async validate<CustomRequest extends Request<RequestTypes>>(
     request: CustomRequest,
     state?: DeepReadonly<CustomState>,
   ): Promise<void> {
@@ -67,10 +67,10 @@ export class PartiallySharedStore<CustomState, Identificable, RequestTypes = any
     await validator.call(this, state, request);
   }
 
-  public async plan<
-    CustomAction extends Action<Identificable, ActionTypes>,
-    CustomRequest extends Request<Identificable, RequestTypes>
-  >(request: CustomRequest, state?: DeepReadonly<CustomState>): Promise<CustomAction[]> {
+  public async plan<CustomAction extends Action<ActionTypes>, CustomRequest extends Request<RequestTypes>>(
+    request: CustomRequest,
+    state?: DeepReadonly<CustomState>,
+  ): Promise<CustomAction[]> {
     const planner = this.plannerMapping.get(request.type);
     if (!planner) {
       return [];
@@ -79,7 +79,7 @@ export class PartiallySharedStore<CustomState, Identificable, RequestTypes = any
     return planner.call(this, state, request);
   }
 
-  public async dispatch<CustomAction extends Action<Identificable, ActionTypes>>(
+  public async dispatch<CustomAction extends Action<ActionTypes>>(
     action: CustomAction,
     state?: DeepReadonly<CustomState>,
   ): Promise<DeepReadonly<CustomState>> {
@@ -93,14 +93,14 @@ export class PartiallySharedStore<CustomState, Identificable, RequestTypes = any
     return this.currentState;
   }
 
-  public createValidator<CustomRequest extends Request<Identificable, RequestTypes>>(
+  public createValidator<CustomRequest extends Request<RequestTypes>>(
     requestType: RequestTypes,
     validator: Validator<CustomState, CustomRequest>,
   ): void {
     this.validatorMapping.set(requestType, validator);
   }
 
-  public createPlanner<CustomRequest extends Request<Identificable, RequestTypes>>(
+  public createPlanner<CustomRequest extends Request<RequestTypes>>(
     requestType: RequestTypes | RequestTypes[],
     planner: Planner<CustomState, CustomRequest>,
   ): void {
@@ -111,7 +111,7 @@ export class PartiallySharedStore<CustomState, Identificable, RequestTypes = any
     }
   }
 
-  public createReducer<CustomAction extends Action<Identificable, ActionTypes>>(
+  public createReducer<CustomAction extends Action<ActionTypes>>(
     actionType: ActionTypes | ActionTypes[],
     reducer: Reducer<CustomState, CustomAction>,
   ): void {
@@ -123,8 +123,8 @@ export class PartiallySharedStore<CustomState, Identificable, RequestTypes = any
   }
 }
 
-export const createStore = function <CustomState, Identificable, RequestTypes = any, ActionTypes = any>(
-  state: CustomState,
-): PartiallySharedStore<CustomState, Identificable, RequestTypes, ActionTypes> {
-  return new PartiallySharedStore<CustomState, Identificable, RequestTypes, ActionTypes>(deepFreeze(state));
+export const createStore = function <CustomState, RequestTypes = any, ActionTypes = any>(
+  state: DeepReadonly<CustomState>,
+): PartiallySharedStore<CustomState, RequestTypes, ActionTypes> {
+  return new PartiallySharedStore<CustomState, RequestTypes, ActionTypes>(deepFreeze(state));
 };

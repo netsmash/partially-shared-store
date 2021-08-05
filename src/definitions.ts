@@ -20,11 +20,11 @@ export type DeepReadonly<T> = T extends Builtin
   ? { readonly [K in keyof T]: DeepReadonly<T[K]> }
   : Readonly<T>;
 
-export type Request<Identificable = any, RequestTypes = any> = Identificable & {
+export type Request<RequestTypes = any> = {
   type: RequestTypes;
 };
 
-export type Action<Identificable = any, ActionTypes = any> = Identificable & {
+export type Action<ActionTypes = any> = {
   type: ActionTypes;
 };
 
