@@ -52,10 +52,6 @@ export class PartiallySharedStore<
     return this._state;
   }
 
-  public clone(state: DeepReadonly<State>): void {
-    this.stateNext(state);
-  }
-
   public async validate(request: Request, state?: DeepReadonly<State>): Promise<void> {
     const validator = this.validatorMapping.get(request.type);
     if (!validator) {
