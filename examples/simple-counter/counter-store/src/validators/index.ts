@@ -1,7 +1,7 @@
+import { RequestTypes as RT } from '../requests';
 import { Store } from '../store';
-import { ActionRequestTypes as ART } from '../action-requests';
 import { decrementValidator } from './decrement.validator';
 
-export const addValidators = function (store: Store) {
-  store.createValidator(ART.Decrement, decrementValidator);
+export const addValidators = (store: Store) => {
+  store.createValidator(RT.Decrement, decrementValidator);
 };

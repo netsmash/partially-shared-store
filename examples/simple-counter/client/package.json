@@ -1,35 +1,18 @@
 {
-  "name": "client",
-  "version": "0.0.0",
+  "name": "simple-example",
+  "version": "1.0.0",
+  "description": "",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "test": "ng test",
-    "lint": "ng lint",
-    "e2e": "ng e2e"
+    "start": "parcel src/index.html",
+    "build": "parcel build src/index.html"
   },
-  "private": true,
-  "dependencies": {
-    "@angular/animations": "~10.0.6",
-    "@angular/common": "~10.0.6",
-    "@angular/compiler": "~10.0.6",
-    "@angular/core": "~10.0.6",
-    "@angular/forms": "~10.0.6",
-    "@angular/platform-browser": "~10.0.6",
-    "@angular/platform-browser-dynamic": "~10.0.6",
-    "@angular/router": "~10.0.6",
-    "rxjs": "~6.5.5",
-    "tslib": "^2.0.0",
-    "zone.js": "~0.10.3"
-  },
+  "license": "ISC",
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.1000.5",
-    "@angular/cli": "~10.0.5",
-    "@angular/compiler-cli": "~10.0.6",
-    "@types/node": "^12.11.1",
-    "ts-node": "~8.3.0",
-    "tslint": "~6.1.0",
-    "typescript": "~3.9.5"
+    "@types/react": "^17.0.15",
+    "@types/react-dom": "^17.0.9",
+    "parcel-bundler": "^1.12.5",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "typescript": "^4.3.5"
   }
 }

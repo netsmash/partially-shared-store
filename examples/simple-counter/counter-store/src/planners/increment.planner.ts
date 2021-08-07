@@ -1,9 +1,11 @@
 import { DeepReadonly } from 'partially-shared-store';
 import { State } from '../state';
-import { ActionRequest, ActionRequestTypes as ART } from '../action-requests';
-import { Action, ActionTypes as AT, createAction } from '../actions';
+import { Request, RequestTypes as RT } from '../requests';
+import { Action, createAction, ActionTypes as AT } from "../actions";
 
 export const incrementPlanner = (
   state: DeepReadonly<State>,
-  request: ActionRequest<ART.Increment>,
-): [Action<AT.Increment>] => [createAction(AT.Increment)({})];
+  request: Request<RT.Increment>,
+): [Action<AT.Increment>] => [
+  createAction(AT.Increment)({}),
+];

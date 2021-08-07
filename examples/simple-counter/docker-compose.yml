@@ -1,18 +1,30 @@
-version: "3.2"
+version: '3.2'
 services:
-        server:
-                build:
-                        context: "../../"
-                        dockerfile: "examples/simple-counter/server/Dockerfile"
-                command: ["npm", "start"]
-                ports:
-                        - 7001:7001
-        client:
-                build:
-                        context: "../../"
-                        dockerfile: "examples/simple-counter/client/Dockerfile"
-                command: ["nginx", "-g", "daemon off;"]
-                environment:
-                        - SERVER_PORT=7001
-                ports:
-                        - 7000:80
+  psstore:
+    image: psstore:local
+    build:
+      context: '../../'
+      dockerfile: 'examples/simple-counter/counter-store/Dockerfile'
+  server:
+    build:
+      context: '../../'
+      dockerfile: 'examples/simple-counter/server/Dockerfile'
+    command: ['npm', 'start']
+    ports:
+      - 7001:7001
+    depends_on:
+      - psstore
+  client:
+    build:
+      context: '../../'
+      dockerfile: 'examples/simple-counter/client/Dockerfile'
+      args:
+        - WS_ENDPOINT=ws://localhost:7001
+    command: ['nginx', '-g', 'daemon off;']
+    depends_on:
+      - psstore
+      - server
+    volumes:
+      - ./client/src:/usr/app/src
+    ports:
+      - 7000:80

@@ -1,7 +1,6 @@
-import { Action } from 'partially-shared-store';
-import { Identificable } from '../identificable';
-import { ActionTypes as AR } from './types';
+import { ActionBase } from './base';
+import { ActionTypes as AT } from './types';
 
-export type IncrementAction = Action<Identificable, AR> & {
-  type: AR.Increment;
-};
+export type IncrementAction = ActionBase & {
+  type: AT.Increment;
+}

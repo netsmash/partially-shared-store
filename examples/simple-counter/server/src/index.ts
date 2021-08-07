@@ -2,12 +2,8 @@ import * as express from 'express';
 import * as http from 'http';
 import * as WebSocket from 'ws';
 import { IdentityMapping, TaskQueuer } from 'partially-shared-store/utils';
-import {
-  Store,
-  createStore,
-  Identificable,
-  createIdentificable,
-} from 'counter-store';
+import { Store, createStore } from 'counter-store';
+import { Identificable, createIdentificable } from './identificable';
 import { onMessage } from './action-request.event';
 
 const app = express();
@@ -15,11 +11,9 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
 const store: Store = createStore();
-const idMap: IdentityMapping<
-  WebSocket,
-  Identificable,
-  Identificable['id']
-> = new IdentityMapping((identificable: Identificable) => identificable.id);
+const idMap: IdentityMapping<WebSocket, Identificable, Identificable['id']> = new IdentityMapping(
+  (identificable: Identificable) => identificable.id,
+);
 const taskQueuer = new TaskQueuer();
 
 wss.on('connection', (ws: WebSocket) => {

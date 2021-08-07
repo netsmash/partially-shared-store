@@ -1,4 +1,4 @@
-export enum ActionTypes {
+export enum RequestTypes {
   Clone,
   Increment,
   Decrement,
