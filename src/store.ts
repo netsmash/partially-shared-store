@@ -81,7 +81,7 @@ export class PartiallySharedStore<
     }
     state = state || this._state;
     const newState: DeepReadonly<State> = await reducer.call(this, state, action);
-    this.stateNext(newState);
+    await this.stateNext(newState);
     return this.currentState;
   }
 
