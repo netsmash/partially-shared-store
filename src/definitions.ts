@@ -35,10 +35,10 @@ export type Validator<CustomState, CustomRequest extends Request> = (
   request: CustomRequest,
 ) => MaybePromise<void>;
 
-export type Planner<CustomState, CustomRequest extends Request> = (
+export type Planner<CustomState, CustomRequest extends Request, CustomAction extends Action> = (
   state: DeepReadonly<CustomState>,
   request: CustomRequest,
-) => MaybePromise<Action[]>;
+) => MaybePromise<CustomAction[]>;
 
 export type Reducer<CustomState, CustomAction extends Action> = (
   state: DeepReadonly<CustomState>,
