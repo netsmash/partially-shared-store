@@ -1,11 +1,9 @@
-import { Action } from 'partially-shared-store';
-import { Identificable } from '../identificable';
-import { ActionTypes as AT } from './types';
-import { State } from '../state';
+import { State } from "../state";
+import { ActionBase } from "./base";
+import { ActionTypes as AT } from "./types";
 
-export interface CloneAction extends Action<Identificable, AT> {
+export type CloneAction = ActionBase & {
   type: AT.Clone;
-  state: State;
   version: string;
-  target: Identificable;
-}
+  state: State;
+};

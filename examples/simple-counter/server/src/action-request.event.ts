@@ -1,8 +1,8 @@
 import * as WebSocket from 'ws';
 import { IdentityMapping, TaskQueuer } from 'partially-shared-store/utils';
-import { Identificable, Store } from 'counter-store';
-import { isRequest, Request } from 'counter-store/action-requests';
-import { Action, isAction, ActionTypes } from 'counter-store/actions';
+import { Store } from 'counter-store';
+import { isRequest, Request, Action, isAction, ActionTypes as AT } from 'counter-store/';
+import { Identificable } from './identificable';
 
 const send = (ws: WebSocket, data: any) => {
   console.log('SENT:', data);
@@ -29,11 +29,13 @@ export const onMessage = (
   };
 
   const dispatchAction = async (action: Action): Promise<void> => {
-    if (!isAction(action, ActionTypes.Clone)) {
+    if (!isAction(action, AT.Clone)) {
       await store.dispatch(action);
     }
 
-    const targets: Identificable[] = 'target' in action ? [action.target] : idMap.getAllIdentities();
+    const targets: Identificable[] = isAction(action, AT.Clone)
+      ? [idMap.getId(ws) as Identificable]
+      : idMap.getAllIdentities();
 
     targets.forEach((target) => {
       const ws = idMap.getT(target);
@@ -44,20 +46,12 @@ export const onMessage = (
     });
   };
 
-  const onRequest = async (ws: WebSocket, request: Request) => {
-    const author = idMap.getId(ws);
-    if (author) {
-      request.author = author;
-      await planRequest(request);
-    }
-  };
-
   return (rawData: string) => {
     taskQueuer.queue(async () => {
-      const data = JSON.parse(JSON.parse(rawData));
-      console.log('RECEIVED:', data);
-      if (isRequest(data)) {
-        await onRequest(ws, data);
+      const request = JSON.parse(rawData);
+      console.log('RECEIVED:', request);
+      if (isRequest(request)) {
+        await planRequest(request);
       } else {
         console.log('it is NOT an action request');
       }
