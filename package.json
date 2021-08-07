@@ -1,9 +1,9 @@
 {
   "name": "partially-shared-store",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Helper library to implement Partially Shared Store architectures.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "test": "jest --config jestconfig.json",
     "build": "./node_modules/.bin/tsc && cp ./package.json ./README.md dist/",
