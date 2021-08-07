@@ -18,14 +18,13 @@ services:
     build:
       context: '../../'
       dockerfile: 'examples/simple-counter/client/Dockerfile'
-#    command: ['nginx', '-g', 'daemon off;']
-    command: ['npm', 'start']
+      args:
+        - WS_ENDPOINT=ws://localhost:7001
+    command: ['nginx', '-g', 'daemon off;']
     depends_on:
       - psstore
       - server
     volumes:
       - ./client/src:/usr/app/src
-    environment:
-      - WS_ENDPOINT=ws://localhost:7001
     ports:
-      - 7000:1234
+      - 7000:80

@@ -1,6 +1,8 @@
 FROM psstore:local AS lib
-FROM node:12.18.1-alpine
+FROM node:12.18.1-alpine as build
 WORKDIR /usr/app
+
+ARG WS_ENDPOINT=ws://localhost:7001
 
 # Add libraries
 COPY --from=lib /usr/local/lib/node_modules/partially-shared-store /usr/local/lib/node_modules/partially-shared-store
@@ -13,8 +15,12 @@ RUN cd /usr/app \
     && npm install \
     && npm link counter-store \
     && npm link partially-shared-store \
-#    && npm run build \
+    && npm run build \
 ;
 
-CMD [ "npm", "start" ]
-EXPOSE 1234
+
+FROM nginx:1.16.0-alpine
+
+COPY --from=build /usr/app/dist /usr/share/nginx/html
+
+EXPOSE 80
